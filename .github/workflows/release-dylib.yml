@@ -25,21 +25,23 @@ jobs:
         run: bash scripts/build-dylib.sh
 
       - name: Package
+        env:
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: |
           mkdir -p release
           cp dist/HBOriginalImage.dylib release/
           shasum -a 256 release/HBOriginalImage.dylib > release/SHA256SUMS.txt
           cd release
-          zip -9 HBOriginalImage-${GITHUB_REF_NAME}-iOS16-arm64.zip HBOriginalImage.dylib SHA256SUMS.txt
+          zip -9 "HBOriginalImage-${RELEASE_TAG}-iOS16-arm64.zip" HBOriginalImage.dylib SHA256SUMS.txt
 
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-          INPUT_TAG: ${{ inputs.tag }}
+          RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
         run: |
-          TAG="${INPUT_TAG:-${GITHUB_REF_NAME}}"
+          TAG="$RELEASE_TAG"
           gh release create "$TAG" \
-            "release/HBOriginalImage-${GITHUB_REF_NAME}-iOS16-arm64.zip" \
+            "release/HBOriginalImage-${TAG}-iOS16-arm64.zip" \
             "release/HBOriginalImage.dylib" \
             "release/SHA256SUMS.txt" \
             --title "小黑盒自动原图插件 $TAG" \
