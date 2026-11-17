@@ -51,3 +51,14 @@ dist/HBOriginalImage.dylib
 ## 免责声明
 
 仅供个人学习与自用。插件通过调用 App 自身按钮事件工作，不绕过账号权限、付费条件或服务端校验。使用修改或注入代码存在稳定性风险。
+
+
+## 下载与发布 dylib
+
+- 现成二进制包：[`dist/HBOriginalImage-iOS16-arm64.zip`](dist/HBOriginalImage-iOS16-arm64.zip)
+- 安装说明：[`INSTALL.md`](INSTALL.md)
+- Mac 构建：`bash scripts/build-dylib.sh`
+- Mac 手动发布：`bash scripts/publish-release.sh v1.0.1`
+- GitHub Actions：打开仓库 **Actions → Build and publish iOS dylib → Run workflow**，填写版本标签；也可推送 `v*` 标签自动构建并发布 Release。
+
+仓库内的预编译包来自项目已有构建产物，已核对为 arm64 Mach-O；它不是本次在 macOS 上重新编译或真机复测的结果。正式 Release 工作流会在 GitHub macOS Runner 上重新编译源码后上传 dylib 和校验文件。
