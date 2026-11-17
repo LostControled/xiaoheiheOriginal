@@ -9,7 +9,7 @@ fi
 gh auth status >/dev/null || { echo "请先运行 gh auth login"; exit 1; }
 
 TAG="${1:-v1.0.0}"
-./scripts/build-dylib.sh
+bash scripts/build-dylib.sh
 mkdir -p dist
 (
   cd dist
