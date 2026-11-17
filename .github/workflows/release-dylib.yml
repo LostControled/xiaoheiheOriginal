@@ -1,0 +1,46 @@
+name: Build and publish iOS dylib
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag (for example v1.0.1)
+        required: true
+        default: v1.0.1
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-14
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build arm64 iOS dylib
+        run: bash scripts/build-dylib.sh
+
+      - name: Package
+        run: |
+          mkdir -p release
+          cp dist/HBOriginalImage.dylib release/
+          shasum -a 256 release/HBOriginalImage.dylib > release/SHA256SUMS.txt
+          cd release
+          zip -9 HBOriginalImage-${GITHUB_REF_NAME}-iOS16-arm64.zip HBOriginalImage.dylib SHA256SUMS.txt
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          INPUT_TAG: ${{ inputs.tag }}
+        run: |
+          TAG="${INPUT_TAG:-${GITHUB_REF_NAME}}"
+          gh release create "$TAG" \
+            "release/HBOriginalImage-${GITHUB_REF_NAME}-iOS16-arm64.zip" \
+            "release/HBOriginalImage.dylib" \
+            "release/SHA256SUMS.txt" \
+            --title "小黑盒自动原图插件 $TAG" \
+            --notes "iOS arm64 dylib，目标环境 iOS 16.3.1。通过 TrollFools 注入。"
