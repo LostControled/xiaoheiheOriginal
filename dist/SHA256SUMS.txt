@@ -1,0 +1,2 @@
+8ea7518408e58af3c614d22ebe3407e78f0ae7a055aff78d6d1c1339e4406cdf  HBOriginalImage-iOS16-arm64.zip
+7ace8f85ab26921d8461947896f30479320357b19881eba7c4c9655e373f992b  HBOriginalImage.dylib (inside ZIP)
