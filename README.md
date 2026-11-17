@@ -23,7 +23,7 @@
 安装 Xcode Command Line Tools 后，在仓库根目录执行：
 
 ```bash
-./build.sh
+bash build.sh
 ```
 
 构建成功后生成：
